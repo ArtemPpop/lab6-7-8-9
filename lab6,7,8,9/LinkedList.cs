@@ -25,26 +25,43 @@ namespace lab6_7_8_9
 
             count++;
         }
-        public void Insert(double index, T item)
+        public void Insert(int index, T item)
         {
-            Node<T> newNode = new Node<T>(item);
-            newNode.Next = null;
-            Node<T> current = head;
-            for (int i = 0; i < index - 1; i++)
+            if (index < 0 || index > count)
             {
-                if (current != null) current = current.Next;
+                throw new ArgumentOutOfRangeException(nameof(index), "Индекс вне диапазона.");
             }
-            if (current != null)
+
+            Node<T> newNode = new Node<T>(item);
+
+            if (index == 0)
             {
+                newNode.Next = head;
+                head = newNode;
+                if (count == 0)
+                    tail = head;
+            }
+            else
+            {
+                Node<T> current = head;
+                for (int i = 0; i < index - 1; i++)
+                {
+                    current = current.Next;
+                }
                 newNode.Next = current.Next;
                 current.Next = newNode;
+                if (current == tail)
+                {
+                    tail = newNode;
+                }
             }
+            count++;
         }
         public int Count { get { return count; } }
         public void Clear()
         {
-            head = null;
-            tail = null;
+            head = null!;
+            tail = null!;
             count = 0;
         }
         public IEnumerator<T> GetEnumerator()
@@ -61,5 +78,8 @@ namespace lab6_7_8_9
         {
             return ((IEnumerable)this).GetEnumerator();
         }
+
+
+       
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -78,6 +80,35 @@ namespace lab6_7_8_9
             string result = string.Join(" ", queue);
             tbResultQueue.Text = result;
         }
+
+        private void InsertNegativeBeforeTwenty()
+        {
+            // Поиск первого отрицательного элемента
+            double? firstNegative = listLab3.FirstOrDefault(item => item < 0);
+
+            // Если отрицательный элемент существует
+            if (firstNegative.HasValue)
+            {
+                // Создаем временный список для хранения результатов
+                var tempList = new LinkedList<double>();
+                foreach (var item in listLab3)
+                {
+                    // Если текущий элемент равен 20, вставляем перед ним первый отрицательный элемент
+                    if (item == 20)
+                    {
+                        tempList.Add(firstNegative.Value);
+                    }
+                    tempList.Add(item);
+                }
+
+                // Очищаем основной список и копируем в него элементы из временного списка
+                listLab3.Clear();
+                foreach (var item in tempList)
+                {
+                    listLab3.Add(item);
+                }
+            }
+        }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             double elementToAdd = double.Parse(tbElementAdd.Text);
@@ -89,21 +120,9 @@ namespace lab6_7_8_9
             }
             tbElementAdd.Text = "";
         }
-        public static void InsertBefore20(List<double> list)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i] == 20 && i > 0)
-                {
-                    double negativeNum = list[i - 1];
-                    list.Insert(i, negativeNum);
-                    i++;
-                }
-            }
-        }
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            InsertBefore20(listLab3);
+            InsertNegativeBeforeTwenty();
             lbList3.Items.Clear();
             foreach (double item in listLab3)
             {
@@ -111,21 +130,9 @@ namespace lab6_7_8_9
             }
         }
 
-        private void InsertBefore20(LinkedList<double> listLab3)
-        {
-             static void InsertBefore20(List<double> list)
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    if (list[i] == 20 && i > 0)
-                    {
-                        double negativeNum = list[i - 1];
-                        list.Insert(i, negativeNum);
-                        i++;
-                    }
-                }
-            }
-        }
+
+
+
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
