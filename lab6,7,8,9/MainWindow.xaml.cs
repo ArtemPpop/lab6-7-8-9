@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace lab6_7_8_9
         private List<double> listLab1;
         private Queue<string> queue;
         private LinkedList<double> listLab3;
+        private Dictionary<string, string> parameters = new Dictionary<string, string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -83,25 +85,23 @@ namespace lab6_7_8_9
 
         private void InsertNegativeBeforeTwenty()
         {
-            // Поиск первого отрицательного элемента
+
             double? firstNegative = listLab3.FirstOrDefault(item => item < 0);
 
-            // Если отрицательный элемент существует
+
             if (firstNegative.HasValue)
             {
-                // Создаем временный список для хранения результатов
+
                 var tempList = new LinkedList<double>();
                 foreach (var item in listLab3)
                 {
-                    // Если текущий элемент равен 20, вставляем перед ним первый отрицательный элемент
+
                     if (item == 20)
                     {
                         tempList.Add(firstNegative.Value);
                     }
                     tempList.Add(item);
                 }
-
-                // Очищаем основной список и копируем в него элементы из временного списка
                 listLab3.Clear();
                 foreach (var item in tempList)
                 {
@@ -129,19 +129,47 @@ namespace lab6_7_8_9
                 lbList3.Items.Add(item);
             }
         }
-
-
-
-
-
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
             listLab3.Clear();
             lbList3.Items.Clear();
         }
+        private void Button_Click_Add(object sender, RoutedEventArgs e)
+        {
+            var input = tbKeyValue.Text.Trim();
+            var parts = input.Split(' ');
+            if (parts.Length >= 2)
+            {
+                var key = parts[0].Trim();
+                var value = string.Join(" ", parts.Skip(1).ToArray()).Trim();
 
-        
+                parameters[key] = value;
+                lbQue.Items.Add($"{key} {value}");
+                tbKeyValue.Clear();
+            }
+            else
+            {
+                MessageBox.Show("Введите ключ и значение через пробел");
+            }
+        }
+
+        private void Button_Click_SortAndMerge(object sender, RoutedEventArgs e)
+        {
+            var queryString = DictToQueryString(parameters);
+            tbResultQueue.Text = queryString;
+        }
+
+        private string DictToQueryString(Dictionary<string, string> parameters)
+        {
+            var sortedPairs = parameters.OrderBy(pair => pair.Key);
+            var queryString = string.Join("&", sortedPairs.Select(pair => $"{pair.Key}={pair.Value}"));
+            return queryString;
+        }
     }
-
-        
 }
+
+
+
+
+
+
